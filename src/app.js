@@ -17,8 +17,27 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({
-    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
+    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄 Hey this is Novpa',
   });
+});
+
+app.post('/detect-language', async (req, res) => {
+  try {
+    const response = await fetch('https://ws.detectlanguage.com/0.2/detect', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.DETECT_LANGUAGE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ q: textInput }),
+    });
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error detecting language:', error);
+    res.status(500).send('Error detecting language');
+  }
 });
 
 app.use('/api/v1', api);
